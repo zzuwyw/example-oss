@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--
+spring日志在官方文档的7.4，地址：https://docs.spring.io/spring-boot/docs/2.7.0/reference/htmlsingle/
+
+When possible, we recommend that you use the -spring variants for your logging configuration (
+for example, logback-spring.xml rather than logback.xml). If you use standard configuration locations,
+Spring cannot completely control log initialization.
+-->
+<configuration>
+    <!-- 导入默认配置，作为默认 -->
+    <include resource="org/springframework/boot/logging/logback/defaults.xml" />
+    <include resource="org/springframework/boot/logging/logback/console-appender.xml" />
+
+    <appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <encoder>
+            <pattern>${FILE_LOG_PATTERN}</pattern>
+            <charset>${FILE_LOG_CHARSET}</charset>
+        </encoder>
+        <file>log/example-oss.log</file>
+        <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+            <fileNamePattern>log/wangyw-redis.%d{yyyy-MM-dd}.%i.log}</fileNamePattern>
+            <!-- 项目重启时是否清理历史记录 -->
+            <cleanHistoryOnStart>true</cleanHistoryOnStart>
+            <!-- 每个文件大小 -->
+            <maxFileSize>10MB</maxFileSize>
+            <!-- 日志文件占用总空间 -->
+            <totalSizeCap>20GB</totalSizeCap>
+            <!-- 历史文件保存天数 -->
+            <maxHistory>3</maxHistory>
+        </rollingPolicy>
+    </appender>
+
+    <springProfile name="dev">
+        <logger name="com.example.oss" level="DEBUG"/>
+        <root level="INFO">
+            <appender-ref ref="CONSOLE"/>
+            <appender-ref ref="FILE"/>
+        </root>
+    </springProfile>
+
+    <springProfile name="prod">
+        <logger name="com.example.oss" level="INFO"/>
+        <root level="INFO">
+            <appender-ref ref="CONSOLE"/>
+            <appender-ref ref="FILE"/>
+        </root>
+    </springProfile>
+
+</configuration>

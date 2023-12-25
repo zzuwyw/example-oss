@@ -1,0 +1,8 @@
+---
+spring:
+  # 生产环境使用 jndi
+  datasource:
+    jndi-name: jdbc/test
+
+
+...

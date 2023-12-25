@@ -1,2 +1,24 @@
+---
+spring:
+  profiles:
+    # 这种配置方式在springboot文档17.2.1中查看，文档地址：https://docs.spring.io/spring-boot/docs/2.7.0/reference/htmlsingle/#howto.properties-and-configuration
+    # 这样配置后，需要在右边Profiles中刷新使用，不刷新会报错
+    active: "@environment@"
 
+  # 指定应用类型为 servlet
+  main:
+    web-application-type: servlet
+
+  web:
+    # 关闭静态资源映射
+    resources:
+      add-mappings: false
+
+  # 接口返回时间以时间戳格式返回
+  jackson:
+    time-zone: GMT+8
+    serialization:
+      write-dates-as-timestamps: true
+
+...
 
