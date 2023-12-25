@@ -1,5 +1,7 @@
 ---
 spring:
+  application:
+    name: example-oss-server
   profiles:
     # 这种配置方式在springboot文档17.2.1中查看，文档地址：https://docs.spring.io/spring-boot/docs/2.7.0/reference/htmlsingle/#howto.properties-and-configuration
     # 这样配置后，需要在右边Profiles中刷新使用，不刷新会报错

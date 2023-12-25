@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.oss.core.dict.mapper.DictItemMapper">
+
+    <select id="getAll" resultType="com.example.oss.core.dict.domain.entity.DictItem">
+        select id, dict_code, item_code, item_name, sort from t_dict_item order by sort
+    </select>
+
+    <select id="getDictItemList" resultType="com.example.oss.core.dict.domain.entity.DictItem">
+        select id, dict_code, item_code, item_name, sort from t_dict_item where dict_code = #{dictCode} order by sort
+    </select>
+
+</mapper>

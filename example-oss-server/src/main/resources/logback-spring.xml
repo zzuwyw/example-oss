@@ -12,14 +12,18 @@ Spring cannot completely control log initialization.
     <include resource="org/springframework/boot/logging/logback/defaults.xml" />
     <include resource="org/springframework/boot/logging/logback/console-appender.xml" />
 
+    <property name="APPLICATION_PACKAGE_NAME" value="com.example.oss"/>
+    <springProperty scope="context" name="LOG_PATH" source="logging.file.path" defaultValue="log"/>
+    <springProperty scope="context" name="APPLICATION_NAME" source="spring.application.name" defaultValue="example-oss-server"/>
+
     <appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
         <encoder>
             <pattern>${FILE_LOG_PATTERN}</pattern>
             <charset>${FILE_LOG_CHARSET}</charset>
         </encoder>
-        <file>log/example-oss.log</file>
+        <file>${LOG_PATH}/${APPLICATION_NAME}.log</file>
         <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
-            <fileNamePattern>log/wangyw-redis.%d{yyyy-MM-dd}.%i.log}</fileNamePattern>
+            <fileNamePattern>${LOG_PATH}/${APPLICATION_NAME}.%d{yyyy-MM-dd}.%i.log}</fileNamePattern>
             <!-- 项目重启时是否清理历史记录 -->
             <cleanHistoryOnStart>true</cleanHistoryOnStart>
             <!-- 每个文件大小 -->
@@ -32,7 +36,7 @@ Spring cannot completely control log initialization.
     </appender>
 
     <springProfile name="dev">
-        <logger name="com.example.oss" level="DEBUG"/>
+        <logger name="${APPLICATION_PACKAGE_NAME}" level="DEBUG"/>
         <root level="INFO">
             <appender-ref ref="CONSOLE"/>
             <appender-ref ref="FILE"/>
@@ -40,7 +44,7 @@ Spring cannot completely control log initialization.
     </springProfile>
 
     <springProfile name="prod">
-        <logger name="com.example.oss" level="INFO"/>
+        <logger name="${APPLICATION_PACKAGE_NAME}" level="INFO"/>
         <root level="INFO">
             <appender-ref ref="CONSOLE"/>
             <appender-ref ref="FILE"/>
