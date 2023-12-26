@@ -20,6 +20,7 @@ import org.springframework.web.servlet.NoHandlerFoundException;
 @Slf4j
 public class ExceptionsHandler {
 
+
     @ExceptionHandler(NoHandlerFoundException.class)
     @ResponseBody
     @ResponseStatus(HttpStatus.NOT_FOUND)
