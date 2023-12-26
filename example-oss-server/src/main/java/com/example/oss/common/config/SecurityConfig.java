@@ -56,7 +56,6 @@ public class SecurityConfig {
                         .loginProcessingUrl("/auth/login")
                         .successHandler(this::onAuthenticationSuccess)
                         .failureHandler(this::onAuthenticationFailure))
-                .userDetailsService(userService)
                 .exceptionHandling(exception -> exception
                         .authenticationEntryPoint(this::onNonAuthenticated)
                         .accessDeniedHandler(this::onResourceUnauthorized))
