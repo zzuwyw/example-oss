@@ -35,7 +35,6 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 import javax.sql.DataSource;
 import java.io.IOException;
-import java.nio.charset.StandardCharsets;
 
 import static jakarta.servlet.http.HttpServletResponse.SC_FORBIDDEN;
 import static jakarta.servlet.http.HttpServletResponse.SC_UNAUTHORIZED;
@@ -179,6 +178,7 @@ public class SecurityConfig {
         response.getWriter().write(responseBody);
     }
 
+    // 退出登录成功
     public void onLogoutSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException {
         ObjectMapper mapper = new ObjectMapper();
         String responseBody = mapper.writeValueAsString(Success.ok(true));

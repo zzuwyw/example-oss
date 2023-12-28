@@ -3,14 +3,17 @@
 import {Lock, User} from "@element-plus/icons-vue";
 import {reactive} from "vue";
 import {ElMessage} from "element-plus";
-import {post} from "@/net/index.js";
+import {get, post} from "@/net/index.js";
 import router from "@/router/index.js";
+import {principalStore} from "@/stores/me.js";
 
 const form = reactive({
   username: '',
   password: '',
   rememberMe: false
 });
+
+const store = principalStore();
 
 const login = () => {
   if (!form.username || !form.password) {
@@ -20,13 +23,16 @@ const login = () => {
       username: form.username,
       password: form.password,
       rememberMe: form.rememberMe
-    }, (data) => {
-      console.log(data);
-      router.push('/index')
+    }, () => {
+      get('/auth/me', (data) => {
+        store.principal.me = data;
+        router.push("/index");
+      }, () => {
+        store.principal.me = null;
+      })
     })
   }
 }
-
 
 </script>
 
@@ -34,6 +40,9 @@ const login = () => {
   <div style="text-align: center;margin: 50px;">
     <div style="margin-top: 80px">
       <el-image src="./src/assets/logo.svg" style="width: 80px;"></el-image>
+      <div>
+        <span>项目实验室</span>
+      </div>
     </div>
     <div style="font-size: 25px;margin-top: 80px">
       <span>登录</span>
@@ -58,12 +67,12 @@ const login = () => {
       <div style="margin-top: 30px">
         <el-button @click="login()" type="primary" style="width: 270px">确认登录</el-button>
       </div>
-      <el-divider>
+<!--      <el-divider>
         <span style="color: gray;font-size: 12px">没有账号</span>
       </el-divider>
       <div>
         <el-button type="warning" style="width: 270px">注册账号</el-button>
-      </div>
+      </div>-->
     </div>
   </div>
 </template>
