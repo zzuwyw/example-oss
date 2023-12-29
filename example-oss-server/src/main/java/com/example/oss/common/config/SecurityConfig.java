@@ -7,6 +7,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.annotation.Resource;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpStatus;
@@ -20,6 +21,7 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.core.session.SessionInformation;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -29,6 +31,8 @@ import org.springframework.security.web.authentication.logout.HeaderWriterLogout
 import org.springframework.security.web.authentication.rememberme.JdbcTokenRepositoryImpl;
 import org.springframework.security.web.authentication.rememberme.PersistentTokenRepository;
 import org.springframework.security.web.header.writers.ClearSiteDataHeaderWriter;
+import org.springframework.security.web.session.HttpSessionEventPublisher;
+import org.springframework.security.web.session.SessionInformationExpiredEvent;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
@@ -41,6 +45,7 @@ import static jakarta.servlet.http.HttpServletResponse.SC_UNAUTHORIZED;
 import static org.springframework.security.web.header.writers.ClearSiteDataHeaderWriter.Directive.CACHE;
 import static org.springframework.security.web.header.writers.ClearSiteDataHeaderWriter.Directive.COOKIES;
 
+@Slf4j
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig {
@@ -67,11 +72,10 @@ public class SecurityConfig {
                         .failureHandler(this::onAuthenticationFailure))
                 // 1个用户只能在一个地方登录
                 .sessionManagement(session -> session
+                        .invalidSessionStrategy(this::onInvalidSessionDetected)
                         .sessionAuthenticationFailureHandler(this::onSessionAuthenticationFailure)
-                        .sessionConcurrency(concurrency -> concurrency
-                                .maximumSessions(1) // 第二次登录将导致第一次登录无效
-                                ) // 阻止第二次登录，会向客户端发送(401)错误
-                        )
+                        .maximumSessions(1)
+                        .expiredSessionStrategy(this::onExpiredSessionDetected))
                 .rememberMe(remember -> remember
                         .rememberMeParameter("rememberMe")
                         .tokenRepository(this.rememberToken())
@@ -81,13 +85,42 @@ public class SecurityConfig {
                         .accessDeniedHandler(this::onResourceUnauthorized))
                 .logout(logout -> logout
                         .logoutUrl("/auth/logout")
-                        .addLogoutHandler(this::clearSiteDataONLogout)
+                        .deleteCookies("JSESSIONID")
+                        .clearAuthentication(true)
+                        .invalidateHttpSession(true)
+                        .addLogoutHandler(this::clearSiteDataOnLogout)
                         .logoutSuccessHandler(this::onLogoutSuccess))
                 .csrf(AbstractHttpConfigurer::disable)
                 .cors(cors -> cors
                         .configurationSource(this.getCorsConfigurationSource()));
 
         return http.build();
+    }
+
+    public void onInvalidSessionDetected(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        ObjectMapper mapper = new ObjectMapper();
+        String responseBody = mapper.writeValueAsString(new Failure(SC_UNAUTHORIZED, "会话超时，请重新登录"));
+        response.setCharacterEncoding("utf-8");
+        response.setStatus(HttpStatus.UNAUTHORIZED.value());
+        response.getWriter().write(responseBody);
+    }
+
+    public void onExpiredSessionDetected(SessionInformationExpiredEvent event) throws IOException {
+        SessionInformation sessionInformation = event.getSessionInformation();
+        UserDetails principal = (UserDetails) sessionInformation.getPrincipal();
+        String username = principal.getUsername();
+
+        HttpServletResponse response = event.getResponse();
+        String responseBody = new ObjectMapper().writeValueAsString(new Failure(SC_UNAUTHORIZED,  username + " 已在其它设备登录"));
+        response.setContentType("text/html;charset=utf-8");
+        response.setCharacterEncoding("utf-8");
+        response.setStatus(HttpStatus.UNAUTHORIZED.value());
+        response.getWriter().write(responseBody);
+    }
+
+    @Bean
+    public HttpSessionEventPublisher httpSessionEventPublisher() {
+        return new HttpSessionEventPublisher();
     }
 
     public CorsConfigurationSource getCorsConfigurationSource() {
@@ -124,7 +157,7 @@ public class SecurityConfig {
     }
 
     // 退出登录后清除站点数据
-    public void clearSiteDataONLogout(HttpServletRequest request, HttpServletResponse response, Authentication authentication) {
+    public void clearSiteDataOnLogout(HttpServletRequest request, HttpServletResponse response, Authentication authentication) {
         new HeaderWriterLogoutHandler(new ClearSiteDataHeaderWriter(CACHE, COOKIES));
     }
 
@@ -141,10 +174,10 @@ public class SecurityConfig {
         response.getWriter().write(responseBody);
     }
 
-    // 用户认证失败
+    // 该账号已在其它地点登录
     public void onSessionAuthenticationFailure(HttpServletRequest request, HttpServletResponse response, AuthenticationException exception) throws IOException {
-        ObjectMapper mapper = new ObjectMapper();
-        String responseBody = mapper.writeValueAsString(new Failure(SC_UNAUTHORIZED, "session error"));
+        String responseBody = new ObjectMapper().writeValueAsString(new Failure(SC_UNAUTHORIZED, "该账号已在其它地点登录"));
+        response.setContentType("text/html;charset=utf-8");
         response.setCharacterEncoding("utf-8");
         response.setStatus(HttpStatus.UNAUTHORIZED.value());
         response.getWriter().write(responseBody);
@@ -152,8 +185,8 @@ public class SecurityConfig {
 
     // 用户认证失败
     public void onAuthenticationFailure(HttpServletRequest request, HttpServletResponse response, AuthenticationException exception) throws IOException {
-        ObjectMapper mapper = new ObjectMapper();
-        String responseBody = mapper.writeValueAsString(new Failure(SC_UNAUTHORIZED, "用户名或密码错误"));
+        String responseBody = new ObjectMapper().writeValueAsString(new Failure(SC_UNAUTHORIZED, "用户名或密码错误"));
+        response.setContentType("text/html;charset=utf-8");
         response.setCharacterEncoding("utf-8");
         response.setStatus(HttpStatus.UNAUTHORIZED.value());
         response.getWriter().write(responseBody);
@@ -162,8 +195,8 @@ public class SecurityConfig {
     // 请求资源未授权
     public void onResourceUnauthorized(HttpServletRequest request, HttpServletResponse response, AccessDeniedException accessDeniedException)
             throws IOException {
-        ObjectMapper mapper = new ObjectMapper();
-        String responseBody = mapper.writeValueAsString(new Failure(SC_FORBIDDEN, "资源未授权"));
+        String responseBody = new ObjectMapper().writeValueAsString(new Failure(SC_FORBIDDEN, "资源未授权"));
+        response.setContentType("text/html;charset=utf-8");
         response.setCharacterEncoding("utf-8");
         response.setStatus(HttpStatus.FORBIDDEN.value());
         response.getWriter().write(responseBody);
@@ -171,8 +204,8 @@ public class SecurityConfig {
 
     // 请求资源时用户未认证
     public void onNonAuthenticated(HttpServletRequest request, HttpServletResponse response, AuthenticationException authException) throws IOException {
-        ObjectMapper mapper = new ObjectMapper();
-        String responseBody = mapper.writeValueAsString(new Failure(SC_UNAUTHORIZED, "用户未认证"));
+        String responseBody = new ObjectMapper().writeValueAsString(new Failure(SC_UNAUTHORIZED, "用户未认证"));
+        response.setContentType("text/html;charset=utf-8");
         response.setCharacterEncoding("utf-8");
         response.setStatus(HttpStatus.UNAUTHORIZED.value());
         response.getWriter().write(responseBody);
