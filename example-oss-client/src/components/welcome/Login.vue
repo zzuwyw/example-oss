@@ -47,16 +47,16 @@ const login = () => {
     <div style="font-size: 25px;margin-top: 80px">
       <span>登录</span>
       <div style="margin-top: 30px;">
-        <el-input v-model="form.username" type="text" placeholder="用户名" :prefix-icon="User">
+        <el-input @keyup.enter="login()" v-model="form.username" type="text" placeholder="用户名" :prefix-icon="User">
         </el-input>
-        <el-input v-model="form.password" type="password" placeholder="密码" :prefix-icon="Lock" style="margin-top: 30px">
+        <el-input @keyup.enter="login()" v-model="form.password" type="password" placeholder="密码" :prefix-icon="Lock" style="margin-top: 30px">
         </el-input>
       </div>
 
       <div style="margin-top: 10px">
         <el-row>
           <el-col :span="12" style="text-align: left">
-            <el-checkbox v-model="form.rememberMe"><span style="font-size: 12px">记住我</span></el-checkbox>
+            <el-checkbox @keyup.enter="login()" v-model="form.rememberMe"><span style="font-size: 12px">记住我</span></el-checkbox>
           </el-col>
           <el-col :span="12" style="text-align: right">
             <el-link><span style="font-size: 12px">忘记密码？</span></el-link>

@@ -32,6 +32,9 @@ import IconHeaderLogo from "@/components/icons/IconHeaderLogo.vue";
   </el-container>
 </template>
 
+<style>
+@import "@/scss/global-cover-element.scss";
+</style>
 
 <style lang="scss" scoped>
 
