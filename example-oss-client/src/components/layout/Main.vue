@@ -3,7 +3,9 @@
 </script>
 
 <template>
-  <div>这里是Main内容</div>
+  <router-view v-slot="Component, route">
+    <component :is="Component"></component>
+  </router-view>
 </template>
 
 <style scoped>

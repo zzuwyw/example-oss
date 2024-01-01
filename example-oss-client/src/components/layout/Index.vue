@@ -1,30 +1,19 @@
 <script setup>
-import Header from "@/components/layout/Header.vue";
-import Aside from "@/components/layout/Aside.vue";
+import Header from "@/components/layout/header/Index.vue";
+import Aside from "@/components/layout/aside/Index.vue";
 import Main from "@/components/layout/Main.vue";
-import IconHeaderLogo from "@/components/icons/IconHeaderLogo.vue";
+import useMenuStore from "@/stores/menu.js";
+
+const menuStore = useMenuStore();
 </script>
 
 <template>
-  <el-container>
-    <el-header>
-
-      <Header class="header"></Header>
-    </el-header>
+  <el-container class="layout-container">
+    <el-aside class="layout-aside transition-all" :style="{width: !menuStore.isCollapse ? menuStore.menuWidth + 'px' : '65px'}">
+      <Aside />
+    </el-aside>
     <el-container>
-      <el-aside
-          class="aside transition-all"
-      >
-        <el-scrollbar>
-          <!-- :unique-opened="true" 子菜单不能同时展开 -->
-          <el-menu
-              :collapse-transition="false"
-              :router="false"
-          >
-            <Aside></Aside>
-          </el-menu>
-        </el-scrollbar>
-      </el-aside>
+      <el-header><Header /></el-header>
       <el-container class="layout-main">
         <Main></Main>
       </el-container>
@@ -37,5 +26,24 @@ import IconHeaderLogo from "@/components/icons/IconHeaderLogo.vue";
 </style>
 
 <style lang="scss" scoped>
-
+.layout-container {
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+  .layout-aside {
+    z-index: 3; // 左侧菜单层级
+    background-color: var(--el-menu-bg-color);
+    border-right: none;
+  }
+  .layout-header {
+    height: 52px;
+    background-color: var(--el-header-bg-color);
+  }
+  .layout-main {
+    box-sizing: border-box;
+    padding: 0;
+    overflow-x: hidden;
+    background-color: var(--el-bg-color);
+  }
+}
 </style>
