@@ -5,7 +5,7 @@ import {reactive} from "vue";
 import {ElMessage} from "element-plus";
 import {get, post} from "@/net/index.js";
 import router from "@/router/index.js";
-import {principalStore} from "@/stores/me.js";
+import {usePrincipalStore} from "@/stores/principal.js";
 
 const form = reactive({
   username: '',
@@ -13,7 +13,7 @@ const form = reactive({
   rememberMe: false
 });
 
-const store = principalStore();
+const principalStore = usePrincipalStore();
 
 const login = () => {
   if (!form.username || !form.password) {
@@ -25,10 +25,10 @@ const login = () => {
       rememberMe: form.rememberMe
     }, () => {
       get('/auth/me', (data) => {
-        store.principal.me = data;
+        principalStore.principal.userDetail = data;
         router.push("/index");
       }, () => {
-        store.principal.me = null;
+        principalStore.principal.userDetail = null;
       })
     })
   }

@@ -3,13 +3,13 @@ import {ArrowDown, UserFilled, CircleClose} from "@element-plus/icons-vue";
 
 import {get} from "@/net/index.js";
 import router from "@/router/index.js";
-import {principalStore} from "@/stores/me.js";
+import {usePrincipalStore} from "@/stores/principal.js";
 
-const authenticateStore = principalStore();
+const principalStore = usePrincipalStore();
 
 const logout = () => {
   get('/auth/logout', () => {
-    authenticateStore.principal.me = null;
+    principalStore.principal.userDetail = null;
     router.replace('/')
   })
 }
@@ -46,7 +46,7 @@ onBeforeUnmount(() => {
     <el-dropdown trigger="click" :hide-on-click="false" popper-class="dropdown-popper" @command="dropdownCommand">
       <div class="user-dropdown">
         <IconMe />
-        <span style="margin-left: 5px">{{authenticateStore.principal.me.username}}</span>
+        <span style="margin-left: 5px">{{principalStore.principal.userDetail.username}}</span>
         <el-icon style="margin-right: 8px; margin-top: 1px"><arrow-down /></el-icon>
       </div>
       <template #dropdown>

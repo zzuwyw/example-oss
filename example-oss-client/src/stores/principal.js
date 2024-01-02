@@ -1,9 +1,9 @@
 import {defineStore} from 'pinia'
 import {reactive} from "vue";
 
-export const principalStore = defineStore('me', () => {
+export const usePrincipalStore = defineStore('principal', () => {
   const principal = reactive({
-    me: null
+    userDetail: null
   })
 
   return { principal }

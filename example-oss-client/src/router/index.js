@@ -1,5 +1,5 @@
 import { createRouter, createWebHistory } from 'vue-router'
-import {principalStore} from "@/stores/me.js";
+import {usePrincipalStore} from "@/stores/principal.js";
 import Layout from "@/components/layout/Index.vue";
 
 const router = createRouter({
@@ -39,8 +39,8 @@ const router = createRouter({
 
 
 router.beforeEach(async (to, from) => {
-  const store = principalStore();
-  const isAuthenticated = !!store.principal.me;
+  const principalStore = usePrincipalStore();
+  const isAuthenticated = !!principalStore.principal.userDetail;
 
   if (isAuthenticated && to.name === 'login') {
     return '/index';
@@ -50,8 +50,8 @@ router.beforeEach(async (to, from) => {
 
 
 router.beforeEach((to, from, next) => {
-  const authenticateStore = principalStore();
-  const isAuthenticated = !!authenticateStore.principal.me;
+  const principalStore = usePrincipalStore();
+  const isAuthenticated = !!principalStore.principal.userDetail;
 
   if (isAuthenticated && to.name === 'welcome') {
     next('/index');

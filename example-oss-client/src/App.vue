@@ -1,21 +1,21 @@
 <script setup>
-import {principalStore} from "@/stores/me.js";
+import {usePrincipalStore} from "@/stores/principal.js";
 import router from "@/router/index.js";
 import axios from "axios";
 import {ElMessage} from "element-plus";
 
-const store = principalStore();
+const principalStore = usePrincipalStore();
 
-if (!store.principal.me) {
+if (!principalStore.principal.userDetail) {
   // 获取已登录用户信息
   axios.get('/auth/me',{
     withCredentials: true
   }).then(({data}) => {
     if (data.code === 200) {
-      store.principal.me = data.data;
+      principalStore.principal.userDetail = data.data;
       router.push("/index");
     } else {
-      store.principal.me = null;
+      principalStore.principal.userDetail = null;
       router.push("/");
     }
   }).catch((error) => {
