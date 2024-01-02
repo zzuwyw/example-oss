@@ -1,5 +1,5 @@
 <script setup>
-import Collapse from "@/components/layout/header/Collapse.vue";
+import Logo from "@/components/layout/header/Logo.vue";
 import BreadCrumb from "@/components/layout/header/BreadCrumb.vue";
 import User from "@/components/layout/header/User.vue";
 </script>
@@ -7,7 +7,7 @@ import User from "@/components/layout/header/User.vue";
 <template>
   <div class="header">
     <div class="header-left">
-      <Collapse />
+      <Logo class="aside-logo" />
       <BreadCrumb />
     </div>
     <div class="header-right">

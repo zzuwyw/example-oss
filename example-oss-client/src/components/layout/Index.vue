@@ -1,21 +1,25 @@
 <script setup>
-import Header from "@/components/layout/header/Index.vue";
 import Aside from "@/components/layout/aside/Index.vue";
+import Header from "@/components/layout/header/Index.vue";
 import Main from "@/components/layout/Main.vue";
 import useMenuStore from "@/stores/menu.js";
 
 const menuStore = useMenuStore();
+
 </script>
 
 <template>
+  <div class="bg-figure">
+    <img src='../../assets/bg-figure.webp' style="position: absolute; bottom: 0; left: 0; width: 331px;" alt="">
+  </div>
   <el-container class="layout-container">
-    <el-aside class="layout-aside transition-all" :style="{width: !menuStore.isCollapse ? menuStore.menuWidth + 'px' : '65px'}">
-      <Aside />
-    </el-aside>
+    <el-header><Header /></el-header>
     <el-container>
-      <el-header><Header /></el-header>
+      <el-aside class="layout-aside transition-all" :style="{width: !menuStore.isCollapse ? menuStore.menuWidth + 'px' : '65px'}">
+        <Aside />
+      </el-aside>
       <el-container class="layout-main">
-        <Main></Main>
+        <Main class="main-content"></Main>
       </el-container>
     </el-container>
   </el-container>
@@ -26,24 +30,46 @@ const menuStore = useMenuStore();
 </style>
 
 <style lang="scss" scoped>
+.bg-figure {
+  pointer-events: none;
+  position: fixed;
+  overflow: hidden;
+  inset-block-start: 0;
+  inset-inline-start: 0;
+  z-index: 0;
+  height: 100%;
+  width: 100%;
+}
 .layout-container {
+  z-index: 1;
   width: 100vw;
   height: 100vh;
   overflow: hidden;
+  background: linear-gradient(#ffffff, #f3f3f3 28%);
+
   .layout-aside {
-    z-index: 3; // 左侧菜单层级
-    background-color: var(--el-menu-bg-color);
     border-right: none;
+    background-color: transparent;
   }
   .layout-header {
     height: 52px;
-    background-color: var(--el-header-bg-color);
+    background-color: transparent;
   }
   .layout-main {
     box-sizing: border-box;
+    z-index: 2;
+    margin: 20px 20px 60px 20px;
     padding: 0;
     overflow-x: hidden;
-    background-color: var(--el-bg-color);
+    background-color: transparent;
+    .main-content {
+      width: 100%;
+      padding: 20px;
+      background-color: rgba(255, 255, 255, 1);
+      color: rgba(0, 0, 0, 0.88);
+      border-radius: 6px;
+      box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.03), 0 1px 6px -1px rgba(0, 0, 0, 0.02), 0 2px 4px 0 rgba(0, 0, 0, 0.02);
+    }
   }
 }
 </style>

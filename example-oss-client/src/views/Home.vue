@@ -3,9 +3,10 @@
 </script>
 
 <template>
-  <div>这是首页</div>
+  <div class="home">这是首页</div>
 </template>
 
 <style scoped>
-
+.home {
+}
 </style>

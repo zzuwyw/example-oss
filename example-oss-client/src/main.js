@@ -1,5 +1,5 @@
 import 'element-plus/dist/index.css'
-import '@/assets/main.scss'
+import 'normalize.css'
 
 import { createApp } from 'vue'
 import { createPinia } from 'pinia'

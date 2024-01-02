@@ -13,19 +13,24 @@ const props = defineProps({
 </script>
 
 <template>
-  <div class="aside-logo">
+  <a class="aside-logo">
     <IconAsideLogo />
     <span class="aside-logo-text" v-show="!props.isCollapse">实验室</span>
-  </div>
+  </a>
 </template>
 
 <style scoped>
 .aside-logo {
+  display: flex;
+  align-items: center;
+  text-align: center;
   .aside-logo-text {
-    padding-left: 10px;
-    color: whitesmoke;
-    font-size: 20px;
-    font-weight: bold;
+    padding-left: 6px;
+    margin-inline-start: 8px;
+    color: rgba(0, 0, 0, 0.88);;
+    font-size: 18px;
+    font-weight: 500;
+    cursor: pointer;
   }
 }
 </style>
