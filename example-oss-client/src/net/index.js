@@ -1,7 +1,7 @@
 import axios from "axios";
 import {ElMessage} from "element-plus";
 
-const defaultError = () => ElMessage.error('发生错误，请联系管理员');
+const defaultError = (message) => ElMessage.error(message);
 const defaultFailure = (code, message) => ElMessage.warning('错误码:' + code + '，错误信息:' + message);
 
 function post(url, data, success, failure = defaultFailure, error = defaultError) {
@@ -16,7 +16,15 @@ function post(url, data, success, failure = defaultFailure, error = defaultError
         } else {
             failure(data.code, data.message);
         }
-    }).catch(error)
+    }).catch((data) => {
+        const response = data.response;
+        const httpStatus = response.status;
+        if (httpStatus === 401 || httpStatus === 403) {
+            error(response.data.message);
+        } else {
+            error('发生错误，请联系管理员');
+        }
+    })
 }
 
 function get(url, success, failure = defaultFailure, error = defaultError) {

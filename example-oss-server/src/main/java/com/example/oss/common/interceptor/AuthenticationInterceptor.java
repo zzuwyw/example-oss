@@ -26,9 +26,12 @@ public class AuthenticationInterceptor implements HandlerInterceptor {
         Authentication authentication = context.getAuthentication();
 
         if (authentication.isAuthenticated()) {
-            UserDetails userDetails = (UserDetails) authentication.getPrincipal();
-            Me me = getLoggingUser(userDetails.getUsername());
-            request.getSession().setAttribute("me", me);
+            if (!(authentication.getPrincipal() instanceof UserDetails userDetails)) {
+                return false;
+            } else {
+                Me me = getLoggingUser(userDetails.getUsername());
+                request.getSession().setAttribute("me", me);
+            }
         }
         return true;
     }

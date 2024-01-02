@@ -46,7 +46,7 @@ onBeforeUnmount(() => {
     <el-dropdown trigger="click" :hide-on-click="false" popper-class="dropdown-popper" @command="dropdownCommand">
       <div class="user-dropdown">
         <IconMe />
-        <span style="margin-left: 5px">{{principalStore.principal.userDetail.username}}</span>
+        <span style="margin-left: 5px">{{principalStore.principal.userDetail ? principalStore.principal.userDetail.username : ''}}</span>
         <el-icon style="margin-right: 8px; margin-top: 1px"><arrow-down /></el-icon>
       </div>
       <template #dropdown>
