@@ -78,6 +78,7 @@ onBeforeUnmount(() => {
     outline: none; // 去除伪元素
     padding: 3px;
     border-radius: 6px;
+    user-select: none;
 
     &:hover {
       background-color: rgba(0, 0, 0, 0.08);
@@ -85,12 +86,13 @@ onBeforeUnmount(() => {
   }
 }
 .user-info {
-  width: 100%;
+  width: 200px;
   height: 50px;
   padding-top: 20px;
   padding-bottom: 10px;
   background-color: RGB(242,242,243);
   border-bottom: 1px solid rgba(170,170,174,0.3);
+
   .user-nick-name {
     color: rgba(0, 0, 0, 0.95);
     font-size: 16px;
@@ -106,6 +108,7 @@ onBeforeUnmount(() => {
 }
 
 :global(.dropdown-popper .el-dropdown-menu__item) {
-  width: 200px;
+  user-select: none;
 }
+
 </style>

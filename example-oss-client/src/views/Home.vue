@@ -4,6 +4,7 @@
 
 <template>
   <div class="home">
+    <div>衡量标准</div>
     <div>这是首页</div>
     <div>这是首页</div>
     <div>这是首页</div>
@@ -109,12 +110,12 @@
     <div>这是首页</div>
     <div>这是首页</div>
     <div>这是首页</div>
-    <div>这是首页</div>
-    <div>这是首页</div>
+    <div>衡量标准</div>
   </div>
 </template>
 
 <style scoped>
 .home {
+  height: 30px;
 }
 </style>

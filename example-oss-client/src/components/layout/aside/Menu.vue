@@ -21,13 +21,12 @@ const menuStore = useMenuStore();
         <span>首页</span>
       </template>
     </el-menu-item>
-    <el-sub-menu index="2">
+    <el-sub-menu>
       <template #title>
         <el-icon><Setting /></el-icon>
         <span>系统管理</span>
       </template>
-      <el-menu-item index="1-4-1">
-        <el-icon><UserFilled /></el-icon>
+      <el-menu-item index="/user">
         <span>用户管理</span>
       </el-menu-item>
     </el-sub-menu>
@@ -48,7 +47,7 @@ const menuStore = useMenuStore();
     <el-sub-menu index="4">
       <template #title>
         <el-icon><Menu /></el-icon>
-        <span>业务管理</span>
+        <span>列表页</span>
       </template>
       <el-menu-item index="2-2">
         <el-icon><UserFilled /></el-icon>

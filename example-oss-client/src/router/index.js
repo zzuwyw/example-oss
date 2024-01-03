@@ -22,14 +22,19 @@ const router = createRouter({
       component: Layout,
       children: [
         {
+          path: "/me",
+          name: "me",
+          component: () => import('@/views/me/Me.vue')
+        },
+        {
           path: "/home",
           name: "home",
           component: () => import('@/views/Home.vue')
         },
         {
-          path: "/me",
-          name: "me",
-          component: () => import('@/views/me/me.vue')
+          path: "/user",
+          name: "user",
+          component: () => import('@/views/user/Index.vue')
         }
       ]
     }

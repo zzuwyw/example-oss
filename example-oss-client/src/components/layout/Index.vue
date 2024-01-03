@@ -56,17 +56,18 @@ const menuStore = useMenuStore();
     background-color: transparent;
   }
   .layout-main {
+    height: calc(100vh - 44px);
     box-sizing: border-box;
     z-index: 2;
-    margin: 20px 20px 60px 20px;
     padding: 0;
     overflow-x: hidden;
     background-color: transparent;
     .main-content {
       width: 100%;
-      padding: 20px;
+      margin: 20px 20px 60px 20px;
       background-color: rgba(255, 255, 255, 1);
       color: rgba(0, 0, 0, 0.88);
+      font-size: var(--el-font-size-base);
       border-radius: 6px;
       box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.03), 0 1px 6px -1px rgba(0, 0, 0, 0.02), 0 2px 4px 0 rgba(0, 0, 0, 0.02);
     }
