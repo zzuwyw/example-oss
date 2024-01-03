@@ -32,18 +32,17 @@ const router = createRouter({
           component: () => import('@/views/me/me.vue')
         }
       ]
-      //component: () => import('@/views/IndexView.vue'),
     }
   ]
 })
 
 
-router.beforeEach(async (to, from) => {
+router.beforeEach(async (to) => {
   const principalStore = usePrincipalStore();
   const isAuthenticated = !!principalStore.principal.userDetail;
 
   if (isAuthenticated && to.name === 'login') {
-    return '/index';
+    return '/home';
   }
 
 })
@@ -52,13 +51,14 @@ router.beforeEach(async (to, from) => {
 router.beforeEach((to, from, next) => {
   const principalStore = usePrincipalStore();
   const isAuthenticated = !!principalStore.principal.userDetail;
+  console.log(principalStore.principal)
 
   if (isAuthenticated && to.name === 'welcome') {
-    next('/index');
+    next('/home');
   } else if (!isAuthenticated && to.name !== 'login') {
     next('/');
   } else if (to.matched.length === 0) {
-    next('/index');
+    next('/home');
   } else {
     next();
   }

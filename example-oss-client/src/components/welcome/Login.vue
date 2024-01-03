@@ -26,7 +26,7 @@ const login = () => {
     }, () => {
       get('/auth/getPrincipal', (data) => {
         principalStore.principal.userDetail = data;
-        router.push("/index");
+        router.push("/home");
       }, () => {
         principalStore.principal.userDetail = null;
       })
