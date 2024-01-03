@@ -27,7 +27,7 @@ const menuStore = useMenuStore();
         <span>系统管理</span>
       </template>
       <el-menu-item index="/user">
-        <span>用户管理</span>
+        <span style="padding-left: 10px">用户管理</span>
       </el-menu-item>
     </el-sub-menu>
     <el-sub-menu index="3">
@@ -49,42 +49,19 @@ const menuStore = useMenuStore();
         <el-icon><Menu /></el-icon>
         <span>列表页</span>
       </template>
-      <el-menu-item index="2-2">
-        <el-icon><UserFilled /></el-icon>
-        <span>商品管理</span>
-      </el-menu-item>
-      <el-menu-item index="2-3">
-        <el-icon><UserFilled /></el-icon>
-        <span>订单管理</span>
-      </el-menu-item>
-    </el-sub-menu>
-    <el-sub-menu index="5">
-      <template #title>
-        <el-icon><Menu /></el-icon>
-        <span>业务管理</span>
-      </template>
-      <el-menu-item index="2-2">
-        <el-icon><UserFilled /></el-icon>
-        <span>商品管理</span>
-      </el-menu-item>
-      <el-menu-item index="2-3">
-        <el-icon><UserFilled /></el-icon>
-        <span>订单管理</span>
-      </el-menu-item>
-    </el-sub-menu>
-    <el-sub-menu index="6">
-      <template #title>
-        <el-icon><Menu /></el-icon>
-        <span>业务管理</span>
-      </template>
-      <el-menu-item index="2-2">
-        <el-icon><UserFilled /></el-icon>
-        <span>商品管理</span>
-      </el-menu-item>
-      <el-menu-item index="2-3">
-        <el-icon><UserFilled /></el-icon>
-        <span>订单管理</span>
-      </el-menu-item>
+      <el-sub-menu index="4-1">
+        <template #title>
+          <el-icon><Menu /></el-icon>
+          <span>列表页2</span>
+        </template>
+        <el-menu-item index="4-2">
+          <span style="padding-left: 10px">商品管理</span>
+        </el-menu-item>
+        <el-menu-item index="4-3">
+          <span style="padding-left: 10px">订单管理</span>
+        </el-menu-item>
+
+      </el-sub-menu>
     </el-sub-menu>
   </el-menu>
 </template>
