@@ -1,5 +1,5 @@
 <script setup>
-
+import router from "@/router/index.js";
 import IconAsideLogo from "@/components/icons/IconAsideLogo.vue";
 
 // 接收父组件传递的参数
@@ -10,13 +10,17 @@ const props = defineProps({
   }
 });
 
+const toHome = () => {
+  router.push('/home');
+}
+
 </script>
 
 <template>
-  <a class="aside-logo">
+  <div @click="toHome()" class="aside-logo">
     <IconAsideLogo />
     <span class="aside-logo-text" v-show="!props.isCollapse">实验室</span>
-  </a>
+  </div>
 </template>
 
 <style scoped>
