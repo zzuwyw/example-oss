@@ -1,6 +1,6 @@
 package com.example.oss.common.interceptor;
 
-import com.example.oss.core.user.domain.response.Me;
+import com.example.oss.core.user.domain.response.Principal;
 import com.example.oss.core.user.service.AuthenticationService;
 import jakarta.annotation.Resource;
 import jakarta.servlet.http.HttpServletRequest;
@@ -25,20 +25,21 @@ public class AuthenticationInterceptor implements HandlerInterceptor {
         SecurityContext context = SecurityContextHolder.getContext();
         Authentication authentication = context.getAuthentication();
 
+        // 没有认证的用户会自动分配匿名用户，匿名用户也是认证状态
         if (authentication.isAuthenticated()) {
             if (!(authentication.getPrincipal() instanceof UserDetails userDetails)) {
                 return false;
             } else {
-                Me me = getLoggingUser(userDetails.getUsername());
-                request.getSession().setAttribute("me", me);
+                Principal principal = getPrincipal(userDetails.getUsername());
+                request.getSession().setAttribute("principal", principal);
             }
         }
         return true;
     }
 
-    // 获取登录用户信息
-    Me getLoggingUser(String username) {
-        return authenticationService.me(username);
+    // 获取当事人
+    Principal getPrincipal(String username) {
+        return authenticationService.getPrincipal(username);
     }
 
 }

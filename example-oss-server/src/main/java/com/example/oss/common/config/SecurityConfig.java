@@ -101,6 +101,7 @@ public class SecurityConfig {
     public void onInvalidSessionDetected(HttpServletRequest request, HttpServletResponse response) throws IOException {
         ObjectMapper mapper = new ObjectMapper();
         String responseBody = mapper.writeValueAsString(new Failure(SC_UNAUTHORIZED, "会话超时，请重新登录"));
+        response.setContentType("text/html;charset=utf-8");
         response.setCharacterEncoding("utf-8");
         response.setStatus(HttpStatus.UNAUTHORIZED.value());
         response.getWriter().write(responseBody);

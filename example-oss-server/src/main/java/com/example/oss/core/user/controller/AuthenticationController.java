@@ -1,7 +1,7 @@
 package com.example.oss.core.user.controller;
 
 import com.example.oss.common.web.Success;
-import com.example.oss.core.user.domain.response.Me;
+import com.example.oss.core.user.domain.response.Principal;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -12,9 +12,9 @@ import org.springframework.web.bind.annotation.SessionAttribute;
 @RequestMapping("/auth")
 public class AuthenticationController {
 
-    @GetMapping("/me")
-    public Success me(@SessionAttribute("me") Me me) {
-        return Success.ok(me);
+    @GetMapping("/getPrincipal")
+    public Success getPrincipal(@SessionAttribute("principal") Principal principal) {
+        return Success.ok(principal);
     }
 
 }

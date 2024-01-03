@@ -7,7 +7,7 @@ import java.util.Date;
 
 @Data
 @Accessors(chain = true)
-public class Me {
+public class Principal {
     private String username;
     private Date registerAt;
 

@@ -1,9 +1,9 @@
 package com.example.oss.core.user.service;
 
-import com.example.oss.core.user.domain.response.Me;
+import com.example.oss.core.user.domain.response.Principal;
 
 public interface AuthenticationService {
 
-    Me me(String username);
+    Principal getPrincipal(String username);
 
 }

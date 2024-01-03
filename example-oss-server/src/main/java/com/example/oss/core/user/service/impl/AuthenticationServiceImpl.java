@@ -1,7 +1,7 @@
 package com.example.oss.core.user.service.impl;
 
 import com.example.oss.core.user.domain.entity.User;
-import com.example.oss.core.user.domain.response.Me;
+import com.example.oss.core.user.domain.response.Principal;
 import com.example.oss.core.user.mapper.UserMapper;
 import com.example.oss.core.user.service.AuthenticationService;
 import jakarta.annotation.Resource;
@@ -15,12 +15,12 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     private UserMapper userMapper;
 
     @Override
-    public Me me(String username) {
-        Me me = new Me();
+    public Principal getPrincipal(String username) {
+        Principal principal = new Principal();
         User user = userMapper.getUserByUsername(username);
-        me
+        principal
                 .setUsername(username)
                 .setRegisterAt(user.getRegisterAt());
-        return me;
+        return principal;
     }
 }

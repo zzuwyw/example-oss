@@ -24,7 +24,7 @@ const login = () => {
       password: form.password,
       rememberMe: form.rememberMe
     }, () => {
-      get('/auth/me', (data) => {
+      get('/auth/getPrincipal', (data) => {
         principalStore.principal.userDetail = data;
         router.push("/index");
       }, () => {
