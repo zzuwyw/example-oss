@@ -2,8 +2,27 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.example.oss.core.user.mapper.UserMapper">
 
+    <insert id="insertUser">
+        insert into t_user(username, password, real_name, enabled, register_at)
+        values (#{user.username}, #{user.password}, #{user.realName}, #{user.enabled}, #{user.registerAt})
+    </insert>
+
     <select id="getUserByUsername" resultType="com.example.oss.core.user.domain.entity.User">
-        select id, username, password, enabled, register_at from t_user where username = #{username}
+        select id, username, password, real_name, enabled, register_at, last_login from t_user where username = #{username}
     </select>
+
+    <select id="getUserList" resultType="com.example.oss.core.user.domain.entity.User">
+        select id, username, password, real_name, enabled, register_at, last_login
+        from t_user
+        where username != 'admin' and enabled = 1
+        <if test="request.username != null and request.username != ''">
+            and INSTR(username, #{request.username})
+        </if>
+        <if test="request.realName != null and request.realName != ''">
+            and INSTR(real_name, #{request.realName})
+        </if>
+        order by register_at desc
+    </select>
+
 
 </mapper>

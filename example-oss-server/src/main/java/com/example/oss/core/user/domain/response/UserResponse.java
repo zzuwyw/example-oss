@@ -1,4 +1,4 @@
-package com.example.oss.core.user.domain.entity;
+package com.example.oss.core.user.domain.response;
 
 import lombok.Data;
 import lombok.experimental.Accessors;
@@ -7,13 +7,10 @@ import java.util.Date;
 
 @Data
 @Accessors(chain = true)
-public class User {
-    private Integer id;
+public class UserResponse {
     private String username;
-    private String password;
     private String realName;
-    private Boolean enabled;
     private Date registerAt;
-    private Date lastLogin;
+    private Boolean enabled;
 
 }
