@@ -34,7 +34,7 @@ spring:
 
 logging:
   file:
-    path: log
+    path: logs
 
 
 ...
