@@ -10,7 +10,7 @@ const menuStore = useMenuStore();
 
 <template>
   <div class="bg-figure">
-    <img src='../../assets/bg-figure.webp' style="position: absolute; bottom: 0; left: 0; width: 331px;" alt="">
+    <img src='../../assets/images/bg-figure.webp' style="position: absolute; bottom: 0; left: 0; width: 331px;" alt="">
   </div>
   <el-container class="layout-container">
     <el-header><Header /></el-header>

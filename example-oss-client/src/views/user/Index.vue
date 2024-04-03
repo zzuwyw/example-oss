@@ -1,7 +1,8 @@
 <script setup>
+import {get, post} from "@/net/index.js";
 
-const tableData = [
-  {
+let tableData = [
+  /*{
     date: '2016-05-03',
     name: 'Tom',
     address: 'No. 189, Grove St, Los Angeles',
@@ -20,8 +21,23 @@ const tableData = [
     date: '2016-05-01',
     name: 'Tom',
     address: 'No. 189, Grove St, Los Angeles',
-  },
+  },*/
 ]
+
+const getTableData = () => {
+  get('/user/getUserList', (data) => {
+    tableData = data;
+    console.log(tableData)
+  })
+}
+
+const createUer = () => {
+
+}
+
+onMounted(() => {
+  getTableData();
+})
 
 </script>
 
@@ -30,7 +46,7 @@ const tableData = [
     <div class="query-container">
       <el-form :inline="true" :label-position="'right'"  class="demo-form-inline">
         <el-form-item label="账号:">
-          <el-input  placeholder="账号" clearable />
+          <el-input placeholder="账号" clearable />
         </el-form-item>
         <el-form-item label="姓名">
           <el-input  placeholder="姓名" clearable />
@@ -51,18 +67,17 @@ const tableData = [
 
     <div class="list-container">
       <div class="operate-buttons">
-        <el-button type="primary">创建用户</el-button>
+        <el-button type="primary" @click="createUer()">创建用户</el-button>
       </div>
       <el-table
           :data="tableData"
-          :default-sort="{ prop: 'date', order: 'descending' }"
+          :default-sort="{ prop: 'registerAt', order: 'descending' }"
           header-row-class-name="list-header"
       >
-        <el-table-column prop="name" label="账号" />
-        <el-table-column prop="name" label="姓名" />
-        <el-table-column prop="name" label="可用状态" />
-        <el-table-column prop="date" label="注册时间" sortable />
-        <el-table-column prop="date" label="最后登录时间" sortable />
+        <el-table-column prop="username" label="账号" />
+        <el-table-column prop="realName" label="姓名" />
+        <el-table-column prop="enabled" label="可用状态" />
+        <el-table-column prop="registerAt" label="注册时间" sortable />
       </el-table>
     </div>
   </div>

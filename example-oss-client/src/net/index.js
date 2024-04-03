@@ -37,6 +37,7 @@ function get(url, success, failureHandler = defaultFailureHandler, errorHandler 
 
 function handleError(error, errorHandler) {
     const response = error.response;
+    console.log('error:' + error)
     const httpStatus = response.status;
     if (httpStatus === 401 || httpStatus === 403) {
         errorHandler(response.data.message);

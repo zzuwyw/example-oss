@@ -2,6 +2,8 @@
 
 </script>
 
+<style src="" />
+
 <template>
   <div style="width: 100vw;height: 100vh;overflow: hidden;display: flex">
     <div id="bg" style="flex: 1;background-color: blueviolet">

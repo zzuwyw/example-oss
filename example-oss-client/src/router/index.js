@@ -7,15 +7,8 @@ const router = createRouter({
   routes: [
     {
       path: '/',
-      name: 'welcome',
-      component: () => import('@/views/WelcomeView.vue'),
-      children: [
-        {
-          path: '',
-          name: 'login',
-          component: () => import('@/components/welcome/Login.vue'),
-        }
-      ]
+      name: 'login',
+      component: () => import('@/components/Login.vue')
     }, {
       path: '/index',
       name: 'index',
@@ -58,7 +51,7 @@ router.beforeEach((to, from, next) => {
   const isAuthenticated = !!principalStore.principal.userDetail;
   console.log(principalStore.principal)
 
-  if (isAuthenticated && to.name === 'welcome') {
+  if (isAuthenticated && to.name === 'login') {
     next('/home');
   } else if (!isAuthenticated && to.name !== 'login') {
     next('/');
