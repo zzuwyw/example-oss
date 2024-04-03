@@ -26,7 +26,7 @@
             <el-form-item prop="username">
               <el-input class="form-login-input"
                   @keyup.enter="login()"
-                  v-model="loginForm.username"
+                  v-model="form.username"
                   type="text"
                   placeholder="用户名"
                   size="large"
@@ -36,7 +36,7 @@
             <el-form-item prop="password">
               <el-input class="form-login-input"
                   @keyup.enter="login()"
-                  v-model="loginForm.password"
+                  v-model="form.password"
                   type="password"
                   placeholder="密码"
                   size="large"
@@ -44,7 +44,7 @@
                   :prefix-icon="Lock"></el-input>
             </el-form-item>
             <el-form-item>
-              <el-checkbox @keyup.enter="login()" v-model="loginForm.rememberMe">
+              <el-checkbox @keyup.enter="login()" v-model="form.rememberMe">
                 <span>记住我的用户名</span>
               </el-checkbox>
               <el-link class="form-login-forget-psd"><span>忘记了密码？</span></el-link>
@@ -114,7 +114,7 @@
 <script setup>
 
 import {Lock, User} from "@element-plus/icons-vue";
-import {reactive } from "vue";
+import {reactive} from "vue";
 import {ElMessage} from "element-plus";
 import {get, post} from "@/net/index.js";
 import router from "@/router/index.js";
@@ -122,7 +122,7 @@ import {usePrincipalStore} from "@/stores/principal.js";
 import IconCopyright from "@/components/icons/IconCopyright.vue";
 import IconLogo from "@/components/icons/IconLogo.vue";
 
-const loginForm = reactive({
+const form = reactive({
   username: '',
   password: '',
   rememberMe: false
@@ -131,13 +131,13 @@ const loginForm = reactive({
 const principalStore = usePrincipalStore();
 
 const login = () => {
-  if (!loginForm.username || !loginForm.password) {
+  if (!form.username || !form.password) {
     ElMessage.warning('请填写用户名和密码');
   } else {
     post('/auth/login', {
-      username: loginForm.username,
-      password: loginForm.password,
-      rememberMe: loginForm.rememberMe
+      username: form.username,
+      password: form.password,
+      rememberMe: form.rememberMe
     }, () => {
       get('/auth/getPrincipal', (data) => {
         principalStore.principal.userDetail = data;
