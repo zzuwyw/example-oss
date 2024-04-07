@@ -19,7 +19,7 @@ const toHome = () => {
 <template>
   <div @click="toHome()" class="aside-logo">
     <IconAsideLogo />
-    <span class="aside-logo-text" v-show="!props.isCollapse">实验室</span>
+    <span class="aside-logo-text" v-show="!props.isCollapse">Alex Lab</span>
   </div>
 </template>
 
@@ -29,7 +29,6 @@ const toHome = () => {
   align-items: center;
   text-align: center;
   .aside-logo-text {
-    padding-left: 6px;
     margin-inline-start: 8px;
     color: rgba(0, 0, 0, 0.88);;
     font-size: 18px;

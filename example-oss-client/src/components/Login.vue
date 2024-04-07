@@ -17,11 +17,10 @@
         </div>
         <div class="form-login-main">
           <el-form
-              ref="loginForm"
               class="from-login"
               status-icon>
             <div class="from-login-type">
-              <span>用户名密码登录</span>
+              <span>通过用户名登录</span>
             </div>
             <el-form-item prop="username">
               <el-input class="form-login-input"

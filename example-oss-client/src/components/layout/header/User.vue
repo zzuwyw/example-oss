@@ -107,8 +107,21 @@ onBeforeUnmount(() => {
   }
 }
 
-:global(.dropdown-popper .el-dropdown-menu__item) {
-  user-select: none;
+:global(.el-dropdown-menu__item) {
+  margin: 0 3px;
 }
+
+:global(.el-dropdown-menu__item:not(.is-disabled):focus) {
+  border-radius: 6px;
+  background-color: RGB(242,242,243);
+  color: rgba(0, 0, 0, 0.6);
+  margin: 0 3px;
+}
+
+/*:global(.dropdown-popper .el-dropdown-menu__item) {
+  user-select: none;
+}*/
+
+
 
 </style>
