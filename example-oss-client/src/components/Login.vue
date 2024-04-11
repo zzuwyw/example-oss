@@ -161,7 +161,7 @@ const login = () => {
 }
 
 .layout-body {
-  flex: 1 1 0;
+  flex: 1;
   padding: 32px 0;
 }
 
@@ -169,9 +169,7 @@ const login = () => {
   display: flex;
   flex-direction: column;
   height: 100%;
-  padding-inline: 32px;
   padding-block: 24px;
-  overflow: auto;
   background: inherit;
 }
 
@@ -222,7 +220,7 @@ const login = () => {
   padding: 0;
   color: rgba(0, 0, 0, 0.88);
   font-size: 14px;
-  line-height: 1.5714285714285714;
+  line-height: 1.78em;
 }
 
 .from-login-type {
@@ -236,39 +234,39 @@ const login = () => {
   color: dodgerblue;
 }
 
-/deep/ .el-input__prefix {
+:deep(.el-input__prefix) {
   color: rgba(0, 0, 0, 0.88);
   font-size: 18px;
 }
 
-/deep/ .el-form-item {
+:deep(.el-form-item) {
   margin-bottom: 24px;
 }
 
-/deep/ .el-form-item__error {
+:deep(.el-form-item__error) {
   font-size: 14px;
   padding-top: 2px;
 }
 
-/deep/ .el-input__suffix .el-input__clear {
+:deep(.el-input__suffix .el-input__clear) {
   color: #848484;
   font-size: 16px;
 }
 
-/deep/ .el-input__suffix .el-input__password {
+:deep(.el-input__suffix .el-input__password) {
   color: #848484;
   font-size: 16px;
 }
 
-/deep/ .el-input__suffix .el-input__clear:hover {
+:deep(.el-input__suffix .el-input__clear:hover) {
   color: rgba(0, 0, 0, 0.88);
 }
 
-/deep/ .el-input__suffix  .el-input__password:hover {
+:deep(.el-input__suffix  .el-input__password:hover) {
   color: rgba(0, 0, 0, 0.88);
 }
 
-/deep/ .el-input__inner {
+:deep(.el-input__inner) {
   color: rgba(0, 0, 0, 0.88);
 }
 
@@ -296,7 +294,6 @@ const login = () => {
   padding-block: 0;
   padding-inline: 16px;
   text-align: center;
-
   color: rgba(0, 0, 0, 0.88);
   font-size: 14px;
 }
