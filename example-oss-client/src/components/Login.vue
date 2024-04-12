@@ -114,15 +114,14 @@
 <script setup>
 
 import { Lock, User } from "@element-plus/icons-vue";
-import {reactive} from "vue";
-import {ElMessage} from "element-plus";
-import {defaultErrorHandler, get, post} from "@/net/index.js";
+import { reactive } from "vue";
+import { ElMessage } from "element-plus";
+import {defaultErrorHandler, defaultFailureHandler, get, post} from "@/net/index.js";
 import router from "@/router/index.js";
-import {usePrincipalStore} from "@/stores/principal.js";
+import { usePrincipalStore } from "@/stores/principal.js";
 import IconCopyright from "@/components/icons/IconCopyright.vue";
 import IconLogo from "@/components/icons/IconLogo.vue";
-import { ElLoading } from 'element-plus';
-import {ref} from "vue";
+import { ref } from "vue";
 
 const form = reactive({
   username: '',
@@ -132,7 +131,6 @@ const form = reactive({
 
 const principalStore = usePrincipalStore();
 
-// const isLoading = ElLoading.service({fullscreen: true});
 const isLoading = ref(false);
 
 const startLoading = () => {
@@ -152,7 +150,10 @@ const login = () => {
       username: form.username,
       password: form.password,
       rememberMe: form.rememberMe
-    }, successHandler, defaultErrorHandler, stopLoading)
+    }, successHandler, defaultFailureHandler, (message) => {
+      stopLoading();
+      defaultErrorHandler(message);
+    })
   }
 }
 

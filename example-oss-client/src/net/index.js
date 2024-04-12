@@ -3,9 +3,8 @@ import { ElMessage } from "element-plus";
 
 const defaultErrorHandler = (message) => ElMessage.error(message);
 const defaultFailureHandler = (code, message) => ElMessage.warning('错误码:' + code + '，错误信息:' + message);
-const defaultFinallyHandler = () => {};
 
-function post(url, params, successHandler, failureHandler = defaultFailureHandler, errorHandler = defaultErrorHandler, finallyHandler = defaultFinallyHandler) {
+function post(url, params, successHandler, failureHandler = defaultFailureHandler, errorHandler = defaultErrorHandler) {
     axios.post(url, params, {
         headers: {
             "Content-Type": 'application/x-www-form-urlencoded'
@@ -19,13 +18,10 @@ function post(url, params, successHandler, failureHandler = defaultFailureHandle
         }
     }).catch((error) => {
         handleError(error, errorHandler);
-    }).then(() => {
-        console.log('finally');
-        finallyHandler();
     })
 }
 
-function get(url, successHandler, failureHandler = defaultFailureHandler, errorHandler = defaultErrorHandler, finallyHandler = defaultFinallyHandler) {
+function get(url, successHandler, failureHandler = defaultFailureHandler, errorHandler = defaultErrorHandler) {
     axios.get(url,{
         withCredentials: true
     }).then(({ data }) => {
@@ -36,8 +32,6 @@ function get(url, successHandler, failureHandler = defaultFailureHandler, errorH
         }
     }).catch((error) => {
         handleError(error, errorHandler);
-    }).then(() => {
-        finallyHandler();
     })
 }
 
