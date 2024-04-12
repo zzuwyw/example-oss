@@ -1,9 +1,31 @@
-<script setup>
-import {ArrowDown, UserFilled, CircleClose} from "@element-plus/icons-vue";
+<template>
+  <div class="user">
+    <el-dropdown trigger="click" :hide-on-click="false" popper-class="dropdown-popper" @command="dropdownCommand">
+      <div class="user-dropdown">
+        <IconMe />
+        <span style="margin-left: 5px">{{ principalStore.principal.userDetail ? principalStore.principal.userDetail.username : '' }}</span>
+        <el-icon style="margin-right: 8px; margin-top: 1px"><arrow-down /></el-icon>
+      </div>
+      <template #dropdown>
+        <div class="user-info">
+          <div class="user-nick-name">超级管理员</div>
+          <div class="user-login-name">admin</div>
+        </div>
+        <el-dropdown-menu>
+          <el-dropdown-item command="me" :icon="UserFilled">个人中心</el-dropdown-item>
+          <el-dropdown-item command="logout" :icon="CircleClose">退出登录</el-dropdown-item>
+        </el-dropdown-menu>
+      </template>
+    </el-dropdown>
+  </div>
+</template>
 
-import {get} from "@/net/index.js";
+<script setup>
+import { ArrowDown, UserFilled, CircleClose } from "@element-plus/icons-vue";
+
+import { get } from "@/net/index.js";
 import router from "@/router/index.js";
-import {usePrincipalStore} from "@/stores/principal.js";
+import { usePrincipalStore } from "@/stores/principal.js";
 
 const principalStore = usePrincipalStore();
 
@@ -26,7 +48,7 @@ const dropdownCommand = (command) => {
 };
 
 import { ref, onBeforeUnmount } from "vue";
-import {useDebounceFn} from "@vueuse/core";
+import { useDebounceFn } from "@vueuse/core";
 import IconMe from "@/components/icons/IconMe.vue";
 /** 监听窗口大小变化，进行是否显示 */
 const showTool = ref(true); // 是否显示
@@ -41,27 +63,6 @@ onBeforeUnmount(() => {
 });
 </script>
 
-<template>
-  <div class="user">
-    <el-dropdown trigger="click" :hide-on-click="false" popper-class="dropdown-popper" @command="dropdownCommand">
-      <div class="user-dropdown">
-        <IconMe />
-        <span style="margin-left: 5px">{{principalStore.principal.userDetail ? principalStore.principal.userDetail.username : ''}}</span>
-        <el-icon style="margin-right: 8px; margin-top: 1px"><arrow-down /></el-icon>
-      </div>
-      <template #dropdown>
-        <div class="user-info">
-          <div class="user-nick-name">超级管理员</div>
-          <div class="user-login-name">admin</div>
-        </div>
-        <el-dropdown-menu>
-          <el-dropdown-item command="me" :icon="UserFilled">个人中心</el-dropdown-item>
-          <el-dropdown-item command="logout" :icon="CircleClose">退出登录</el-dropdown-item>
-        </el-dropdown-menu>
-      </template>
-    </el-dropdown>
-  </div>
-</template>
 
 <style lang="scss" scoped>
 

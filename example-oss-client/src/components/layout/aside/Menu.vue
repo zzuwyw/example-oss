@@ -21,7 +21,7 @@ const menuStore = useMenuStore();
         <span>首页</span>
       </template>
     </el-menu-item>
-    <el-sub-menu>
+    <el-sub-menu index="/home22">
       <template #title>
         <el-icon><Setting /></el-icon>
         <span>系统管理</span>

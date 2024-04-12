@@ -1,6 +1,6 @@
-import {defineStore} from 'pinia'
+import { defineStore } from 'pinia'
 
-const menuStore = defineStore("menu", {
+const menuStore = defineStore('menu', {
     persist: {
         key: "menu_store",
         storage: localStorage

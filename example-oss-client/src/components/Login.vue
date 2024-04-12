@@ -51,6 +51,7 @@
             <el-form-item>
               <el-button type="primary"
                          @click="login()"
+                         :loading="isLoading"
                          size="large"
                          :auto-insert-space="true"
                          class="form-login-btn">登录</el-button>
@@ -112,14 +113,16 @@
 
 <script setup>
 
-import {Lock, User} from "@element-plus/icons-vue";
+import { Lock, User } from "@element-plus/icons-vue";
 import {reactive} from "vue";
 import {ElMessage} from "element-plus";
-import {get, post} from "@/net/index.js";
+import {defaultErrorHandler, get, post} from "@/net/index.js";
 import router from "@/router/index.js";
 import {usePrincipalStore} from "@/stores/principal.js";
 import IconCopyright from "@/components/icons/IconCopyright.vue";
 import IconLogo from "@/components/icons/IconLogo.vue";
+import { ElLoading } from 'element-plus';
+import {ref} from "vue";
 
 const form = reactive({
   username: '',
@@ -129,23 +132,37 @@ const form = reactive({
 
 const principalStore = usePrincipalStore();
 
+// const isLoading = ElLoading.service({fullscreen: true});
+const isLoading = ref(false);
+
+const startLoading = () => {
+  isLoading.value = true;
+}
+
+const stopLoading = () => {
+  isLoading.value = false;
+}
+
 const login = () => {
   if (!form.username || !form.password) {
     ElMessage.warning('请填写用户名和密码');
   } else {
+    startLoading();
     post('/auth/login', {
       username: form.username,
       password: form.password,
       rememberMe: form.rememberMe
-    }, () => {
-      get('/auth/getPrincipal', (data) => {
-        principalStore.principal.userDetail = data;
-        router.push("/home");
-      }, () => {
-        principalStore.principal.userDetail = null;
-      })
-    })
+    }, successHandler, defaultErrorHandler, stopLoading)
   }
+}
+
+const successHandler = () => {
+  get('/auth/getPrincipal', (data) => {
+    principalStore.principal.userDetail = data;
+    router.push("/home");
+  }, () => {
+    principalStore.principal.userDetail = null;
+  })
 }
 
 </script>
