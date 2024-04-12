@@ -133,11 +133,11 @@ const principalStore = usePrincipalStore();
 
 const isLoading = ref(false);
 
-const startLoading = () => {
+const loading = () => {
   isLoading.value = true;
 }
 
-const stopLoading = () => {
+const finishLoading = () => {
   isLoading.value = false;
 }
 
@@ -145,13 +145,13 @@ const login = () => {
   if (!form.username || !form.password) {
     ElMessage.warning('请填写用户名和密码');
   } else {
-    startLoading();
+    loading();
     post('/auth/login', {
       username: form.username,
       password: form.password,
       rememberMe: form.rememberMe
     }, successHandler, defaultFailureHandler, (message) => {
-      stopLoading();
+      finishLoading();
       defaultErrorHandler(message);
     })
   }
