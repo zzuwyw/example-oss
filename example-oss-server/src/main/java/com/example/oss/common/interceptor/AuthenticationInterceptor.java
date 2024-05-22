@@ -25,7 +25,7 @@ public class AuthenticationInterceptor implements HandlerInterceptor {
         SecurityContext context = SecurityContextHolder.getContext();
         Authentication authentication = context.getAuthentication();
 
-        // 没有认证的用户会自动分配匿名用户，匿名用户也是认证状态
+        // 没有认证的用户框架会自动分配匿名用户，匿名用户也是认证状态
         if (authentication.isAuthenticated()) {
             if (!(authentication.getPrincipal() instanceof UserDetails userDetails)) {
                 return false;
