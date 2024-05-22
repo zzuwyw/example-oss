@@ -13,7 +13,7 @@ import java.io.Serializable;
 public class Failure implements Result, Serializable {
     @Serial
     private static final long serialVersionUID = 1L;
-    private static final Boolean status = Boolean.FALSE;
+    private final Boolean status = Boolean.FALSE;
     private Integer errorCode;
     private String errorMessage;
 

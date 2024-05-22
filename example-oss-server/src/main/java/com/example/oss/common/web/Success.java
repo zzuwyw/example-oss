@@ -11,7 +11,7 @@ import lombok.experimental.Accessors;
 @Data
 @Accessors(chain = true)
 public class Success implements Result {
-    private static final Boolean status = Boolean.TRUE;
+    private final Boolean status = Boolean.TRUE;
     private Object data;
 
     /**
