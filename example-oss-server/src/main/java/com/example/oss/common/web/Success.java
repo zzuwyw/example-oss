@@ -1,7 +1,5 @@
 package com.example.oss.common.web;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.Data;
 import lombok.experimental.Accessors;
 
@@ -29,17 +27,6 @@ public class Success implements Result {
      */
     public static Success ok(Object data) {
         return new Success().setData(data);
-    }
-
-    /**
-     * 请求成功，返回json格式的请求结果
-     * @param data 响应数据
-     * @return json格式的请求结果
-     * @throws JsonProcessingException json处理异常
-     */
-    public static String okAsString(Object data) throws JsonProcessingException {
-        ObjectMapper mapper = new ObjectMapper();
-        return mapper.writeValueAsString(Success.ok(data));
     }
 
 }

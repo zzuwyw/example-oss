@@ -1,14 +1,17 @@
 package com.example.oss.common.config;
 
 import com.example.oss.common.web.Failure;
+import com.example.oss.common.web.Result;
 import com.example.oss.common.web.Success;
 import com.example.oss.core.user.service.UserService;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.annotation.Resource;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.ProviderManager;
@@ -38,8 +41,6 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import javax.sql.DataSource;
 import java.io.IOException;
 
-import static jakarta.servlet.http.HttpServletResponse.SC_FORBIDDEN;
-import static jakarta.servlet.http.HttpServletResponse.SC_UNAUTHORIZED;
 import static org.springframework.security.web.header.writers.ClearSiteDataHeaderWriter.Directive.CACHE;
 import static org.springframework.security.web.header.writers.ClearSiteDataHeaderWriter.Directive.COOKIES;
 
@@ -96,27 +97,6 @@ public class SecurityConfig {
         return http.build();
     }
 
-    public void onInvalidSessionDetected(HttpServletRequest request, HttpServletResponse response) throws IOException {
-        String body = Failure.failureAsString(SC_UNAUTHORIZED, "会话超时，请重新登录");
-        response.setContentType("text/html;charset=utf-8");
-        response.setCharacterEncoding("utf-8");
-        //response.setStatus(HttpStatus.UNAUTHORIZED.value());
-        response.getWriter().write(body);
-    }
-
-    public void onExpiredSessionDetected(SessionInformationExpiredEvent event) throws IOException {
-        SessionInformation sessionInformation = event.getSessionInformation();
-        UserDetails principal = (UserDetails) sessionInformation.getPrincipal();
-        String username = principal.getUsername();
-
-        HttpServletResponse response = event.getResponse();
-        String body = Failure.failureAsString(SC_UNAUTHORIZED, username + " 已在其它设备登录");
-        response.setContentType("text/html;charset=utf-8");
-        response.setCharacterEncoding("utf-8");
-        //response.setStatus(HttpStatus.UNAUTHORIZED.value());
-        response.getWriter().write(body);
-    }
-
     @Bean
     public HttpSessionEventPublisher httpSessionEventPublisher() {
         return new HttpSessionEventPublisher();
@@ -165,56 +145,110 @@ public class SecurityConfig {
         return userService.loadUserByUsername(username);
     }
 
+    /**
+     * 会话超时
+     */
+    public void onInvalidSessionDetected(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        Failure failure = Failure.failure("会话超时，请重新登录");
+        responseFailure(response, HttpStatus.UNAUTHORIZED, failure);
+    }
 
-    // 用户认证成功
+    /**
+     * 用户已在其它设备登录
+     */
+    public void onExpiredSessionDetected(SessionInformationExpiredEvent event) throws IOException {
+        SessionInformation sessionInformation = event.getSessionInformation();
+        UserDetails principal = (UserDetails) sessionInformation.getPrincipal();
+        HttpServletResponse response = event.getResponse();
+        Failure failure = Failure.failure(principal.getUsername() + " 已在其它设备登录");
+        responseFailure(response, HttpStatus.UNAUTHORIZED, failure);
+    }
+
+    /**
+     * 用户认证成功
+     */
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException {
-        String body = Success.okAsString(true);
-        response.getWriter().write(body);
+        responseSuccess(response);
     }
 
-    // 该账号已在其它地点登录
+    /**
+     * 该账号已在其它地点登录
+     */
     public void onSessionAuthenticationFailure(HttpServletRequest request, HttpServletResponse response, AuthenticationException exception) throws IOException {
-        String body = Failure.failureAsString(SC_UNAUTHORIZED, "该账号已在其它地点登录");
-        response.setContentType("text/html;charset=utf-8");
-        response.setCharacterEncoding("utf-8");
-        //response.setStatus(HttpStatus.UNAUTHORIZED.value());
-        response.getWriter().write(body);
+        Failure failure = Failure.failure("该账号已在其它地点登录");
+        responseFailure(response, HttpStatus.UNAUTHORIZED, failure);
     }
 
-    // 用户认证失败
+    /**
+     * 用户认证失败-用户名或密码错误
+     */
     public void onAuthenticationFailure(HttpServletRequest request, HttpServletResponse response, AuthenticationException exception) throws IOException {
-        String body = Failure.failureAsString(SC_UNAUTHORIZED, "用户名或密码错误");
-        response.setContentType("text/html;charset=utf-8");
-        response.setCharacterEncoding("utf-8");
-        //response.setStatus(HttpStatus.UNAUTHORIZED.value());
-        response.getWriter().write(body);
+        Failure failure = Failure.failure("用户名或密码错误");
+        responseFailure(response, HttpStatus.UNAUTHORIZED, failure);
     }
 
-    // 请求资源未授权
-    public void onResourceUnauthorized(HttpServletRequest request, HttpServletResponse response, AccessDeniedException accessDeniedException)
-            throws IOException {
-        String body = Failure.failureAsString(SC_FORBIDDEN, "资源未授权");
-        response.setContentType("text/html;charset=utf-8");
-        response.setCharacterEncoding("utf-8");
-        //response.setStatus(HttpStatus.FORBIDDEN.value());
-        response.getWriter().write(body);
+    /**
+     * 请求资源未授权
+     */
+    public void onResourceUnauthorized(HttpServletRequest request, HttpServletResponse response, AccessDeniedException accessDeniedException) throws IOException {
+        Failure failure = Failure.failure("资源未授权");
+        responseFailure(response, HttpStatus.FORBIDDEN, failure);
     }
 
-    // 请求资源时用户未认证
+    /**
+     * 请求资源时用户未认证
+     */
     public void onNonAuthenticated(HttpServletRequest request, HttpServletResponse response, AuthenticationException authException) throws IOException {
-        String body = Failure.failureAsString(SC_UNAUTHORIZED, "用户未认证");
+        Failure failure = Failure.failure("用户未认证");
+        responseFailure(response, HttpStatus.UNAUTHORIZED, failure);
+    }
+
+    /**
+     * 退出登录成功
+     */
+    public void onLogoutSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException {
+        responseSuccess(response);
+    }
+
+    /**
+     * 响应成功
+     *
+     * @param response 待响应的响应体
+     * @throws IOException 响应异常
+     */
+    private void responseSuccess(HttpServletResponse response) throws IOException {
+        Success success = Success.ok(true);
+        response(response, HttpStatus.OK, success);
+    }
+
+    /**
+     * 响应失败
+     *
+     * @param response 响应体
+     * @param httpStatus 响应状态
+     * @param failure 错误信息
+     * @throws IOException 响应异常
+     */
+    private void responseFailure(HttpServletResponse response, HttpStatus httpStatus, Failure failure) throws IOException {
+        response(response, httpStatus, failure);
+    }
+
+    /**
+     * 向响应体写响应内容
+     *
+     * @param response 待响应的响应体
+     * @param httpStatus 待响应的响应状态
+     * @param result 待响应的响应结果
+     * @throws IOException 响应异常
+     */
+    private void response(HttpServletResponse response, HttpStatus httpStatus, Result result) throws IOException {
+        ObjectMapper mapper = new ObjectMapper();
+        String body = mapper.writeValueAsString(result);
         response.setContentType("text/html;charset=utf-8");
         response.setCharacterEncoding("utf-8");
-        //response.setStatus(HttpStatus.UNAUTHORIZED.value());
+        response.setStatus(httpStatus.value());
         response.getWriter().write(body);
     }
-
-    // 退出登录成功
-    public void onLogoutSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException {
-        String body = Success.okAsString(true);
-        response.getWriter().write(body);
-    }
-
 
 
 }

@@ -6,7 +6,7 @@ import lombok.Data;
 @Data
 public class DictRequest {
 
-    @NotBlank(message = "dictCode不能空")
+    @NotBlank(message = "40000-dictCode不能空")
     private String dictCode;
 
 }

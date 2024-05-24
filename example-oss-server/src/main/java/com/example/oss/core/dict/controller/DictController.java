@@ -21,7 +21,7 @@ public class DictController {
 	@Resource
 	private DictService dictService;
 
-	@PreAuthorize("hasAnyRole('USER')")
+	//@PreAuthorize("hasAnyRole('USER')")
 	@RequestMapping("/getDict")
 	public Success getDict(@RequestBody @Valid DictRequest request) {
 		return Success.ok(dictService.getDict(request.getDictCode()));
